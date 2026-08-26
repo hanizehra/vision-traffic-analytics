@@ -1,0 +1,23 @@
+{
+    "video": "data/videos/people/p2_two_way_entrance.mp4",
+    "resolution": [
+        1920,
+        1080
+    ],
+    "lines": [
+        {
+            "id": "L1",
+            "name": "count_line",
+            "points": [
+                [
+                    929,
+                    24
+                ],
+                [
+                    1021,
+                    595
+                ]
+            ]
+        }
+    ]
+}

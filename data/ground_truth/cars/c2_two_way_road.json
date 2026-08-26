@@ -1,0 +1,23 @@
+{
+    "video": "data/videos/cars/c2_two_way_road.mp4",
+    "resolution": [
+        3840,
+        2160
+    ],
+    "lines": [
+        {
+            "id": "L1",
+            "name": "count_line",
+            "points": [
+                [
+                    7,
+                    1098
+                ],
+                [
+                    3816,
+                    1105
+                ]
+            ]
+        }
+    ]
+}
