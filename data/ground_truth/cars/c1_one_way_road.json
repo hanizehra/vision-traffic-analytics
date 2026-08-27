@@ -13,17 +13,17 @@
             "name": "count_line",
             "points": [
                 [
-                    685,
-                    823
+                    687,
+                    821
                 ],
                 [
-                    1864,
-                    802
+                    1831,
+                    783
                 ]
             ]
         }
     ],
     "annotator": "Hani",
-    "annotation_date": "2026-08-26",
-    "events": []
+    "annotation_date": "2026-08-27",
+    "events": [] 
 }
