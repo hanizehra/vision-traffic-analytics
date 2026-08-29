@@ -23,24 +23,25 @@ KEY_PERSON = ord("p")
 
 WINDOW_NAME = "Ground Truth Annotator"
 
+
 LINE_COLOR = (0, 255, 0)
-TEXT_COLOR = (0, 255, 0)
+TEXT_COLOR = (0, 0, 255)
+STATUS_FONT = cv2.FONT_HERSHEY_SIMPLEX
+STATUS_FONT_SCALE = 0.6
+STATUS_THICKNESS = 1
+STATUS_X = 20
+STATUS_START_Y = 35
+STATUS_SPACING = 30
 
 
 def load_ground_truth(file_path: Path) -> dict:
     """Load existing ground-truth data from JSON."""
 
-    with file_path.open(
-        "r",
-        encoding="utf-8",
-    ) as file:
+    with file_path.open("r",encoding="utf-8",) as file:
         return json.load(file)
 
 
-def save_ground_truth(
-    file_path: Path,
-    ground_truth: dict,
-) -> None:
+def save_ground_truth(file_path: Path,ground_truth: dict,) -> None:
     """Save updated ground-truth data to JSON."""
 
     with file_path.open(
@@ -124,79 +125,48 @@ def draw_status(
     """Draw annotation status information on the frame."""
 
     timestamp_sec = frame_number / fps
+    state = "Paused" if is_paused else "Playing"
 
-    state = "PAUSED" if is_paused else "PLAYING"
-
-    cv2.putText(
-        image,
+    status_lines = [
         f"Frame: {frame_number}",
-        (20, 35),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.8,
-        TEXT_COLOR,
-        2,
-    )
-    cv2.putText(
-        image,
         f"Class: {current_class}",
-        (20, 75),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        1,
-        (0, 255, 0),
-        2,
-    )
-
-    cv2.putText(
-        image,
         f"Time: {timestamp_sec:.2f}s",
-        (20, 105),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.7,
-        TEXT_COLOR,
-        2,
-    )
-
-    cv2.putText(
-        image,
         f"State: {state}",
-        (20, 135),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.7,
-        TEXT_COLOR,
-        2,
-    )
-
-    cv2.putText(
-        image,
         f"Events: {len(events)}",
-        (20, 165),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.7,
-        TEXT_COLOR,
-        2,
-    )
+    ]
 
-    if pending_events:
-
-        pending_text = (
-            f"Marked this frame: "
-            f"{len(pending_events)}"
+    for index, text in enumerate(status_lines):
+        y_position = STATUS_START_Y + (
+            index * STATUS_SPACING
         )
 
         cv2.putText(
             image,
-            pending_text,
-            (20, 195),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.7,
+            text,
+            (STATUS_X, y_position),
+            STATUS_FONT,
+            STATUS_FONT_SCALE,
             TEXT_COLOR,
-            2,
+            STATUS_THICKNESS,
+        )
+
+    if pending_events:
+        cv2.putText(
+            image,
+            f"Marked this frame: {len(pending_events)}",
+            (
+                STATUS_X,
+                STATUS_START_Y
+                + len(status_lines) * STATUS_SPACING,
+            ),
+            STATUS_FONT,
+            STATUS_FONT_SCALE,
+            TEXT_COLOR,
+            STATUS_THICKNESS,
         )
 
 
-def print_event(
-    event: dict,
-) -> None:
+def print_event(event: dict,) -> None:
     """Print a newly created annotation event."""
 
     print(
@@ -245,13 +215,9 @@ def main() -> None:
 
     args = parse_arguments()
 
-    video_path = Path(
-        VIDEO_PATHS[args.video]
-    )
+    video_path = Path(VIDEO_PATHS[args.video])
 
-    ground_truth_path = create_ground_truth_path(
-        video_path
-    )
+    ground_truth_path = create_ground_truth_path(video_path)
 
     if not ground_truth_path.exists():
         raise FileNotFoundError(
@@ -259,9 +225,7 @@ def main() -> None:
             f"{ground_truth_path}"
         )
 
-    ground_truth = load_ground_truth(
-        ground_truth_path
-    )
+    ground_truth = load_ground_truth(ground_truth_path)
 
     fps = ground_truth["fps"]
     events = ground_truth["events"]
