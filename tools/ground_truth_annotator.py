@@ -12,6 +12,7 @@ from vision_traffic_analytics.frame_utils import prepare_display_frame, convert_
 KEY_SPACE = ord(" ")
 KEY_PREVIOUS = 97
 KEY_NEXT = 100
+KEY_UNDO = ord("u")     
 KEY_IN = ord("i")
 KEY_OUT = ord("o")
 KEY_SAVE = ord("s")
@@ -221,6 +222,23 @@ def print_event(
         f"{event['direction'].upper()} marked "
         f"→ track_id={event['track_id']}"
     )
+
+def undo_last_event(events: list[dict]) -> int | None:
+    """Remove the most recently added event and return its ID."""
+
+    if not events:
+        print("No events to undo.")
+        return None
+
+    removed_event = events.pop()
+
+    print(
+        f"Undid event → track_id={removed_event['track_id']} "
+        f"| frame={removed_event['frame']} "
+        f"| direction={removed_event['direction']}"
+    )
+
+    return removed_event["track_id"]
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -452,6 +470,13 @@ def main() -> None:
                 break
 
             current_frame_number += 1
+
+        if is_paused and key == KEY_UNDO:
+
+            removed_event_id = undo_last_event(events)
+
+            if removed_event_id is not None:
+                next_event_id = removed_event_id        
 
     video_capture.release()
     cv2.destroyAllWindows()

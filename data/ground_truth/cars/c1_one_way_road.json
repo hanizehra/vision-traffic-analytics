@@ -13,17 +13,26 @@
             "name": "count_line",
             "points": [
                 [
-                    687,
-                    821
+                    493,
+                    840
                 ],
                 [
-                    1831,
-                    783
+                    1906,
+                    800
                 ]
             ]
         }
     ],
     "annotator": "Hani",
-    "annotation_date": "2026-08-27",
-    "events": [] 
+    "annotation_date": "2026-08-29",
+    "events": [
+        {
+            "track_id": 1,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 41,
+            "timestamp_sec": 0.82
+        }
+    ]
 }
