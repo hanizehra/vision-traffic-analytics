@@ -5,11 +5,9 @@ from pathlib import Path
 import cv2
 
 from vision_traffic_analytics.config import VIDEO_PATHS
+from vision_traffic_analytics.paths import create_ground_truth_path
+from vision_traffic_analytics.frame_utils import prepare_display_frame
 
-# predefined area used to display the video.
-# video keeps its original aspect ratio inside this area.
-DISPLAY_WIDTH = 1000
-DISPLAY_HEIGHT = 600
 
 KEY_ESC = 27
 KEY_ENTER = 13
@@ -23,19 +21,6 @@ LINE_NAME = "count_line"
 selected_points = []
 
 
-def calculate_display_size(frame_width: int, frame_height:int) -> tuple[int,int,float]:
-    """calculate the proportional display size of the video."""
-
-    width_scale = DISPLAY_WIDTH / frame_width
-    height_scale = DISPLAY_HEIGHT / frame_height
-
-    # use the smaller scale so the entire frame fits without cropping.
-    scale_factor = min(width_scale, height_scale)
-
-    display_width = int(frame_width * scale_factor)
-    display_height = int(frame_height * scale_factor)
-
-    return display_width, display_height, scale_factor
 
 
 def convert_to_original_coordinates(
@@ -74,30 +59,6 @@ def handle_mouse_event(event : int, x : int, y : int, flags : int, parameters) -
 
     print(f"Display coordinate: ({x}, {y})")
 
-
-def create_output_path(video_path: Path) -> Path:
-    """Create the matching ground-truth JSON path."""
-
-    video_parts = video_path.parts
-
-    try:
-        videos_index = video_parts.index("videos")
-    except ValueError:
-        raise ValueError(
-            "Video path must be inside the data/videos directory."
-        )
-
-    relative_parts = video_parts[videos_index + 1 :]
-
-    category = relative_parts[0]
-    video_name = video_path.stem
-
-    return (
-        Path("data")
-        / "ground_truth"
-        / category
-        / f"{video_name}.json"
-    )
 
 
 def save_line_data(
@@ -181,7 +142,7 @@ def main() -> None:
             f"Video file not found: {video_path}"
         )
 
-    output_path = create_output_path(video_path)
+    output_path = create_ground_truth_path(video_path)
 
     video_capture = cv2.VideoCapture(
         str(video_path)
@@ -214,38 +175,13 @@ def main() -> None:
         f"{frame_width}x{frame_height}"
     )
 
-    # Calculate the proportional display size.
-    display_width, display_height, scale_factor = (
-        calculate_display_size(
-            frame_width,
-            frame_height,
-        )
+    display_canvas, scale_factor, offset_x, offset_y = (
+        prepare_display_frame(frame)
     )
 
     print(
         f"Display video resolution: "
-        f"{display_width}x{display_height}"
-    )
-
-    # Resize the frame while preserving its aspect ratio.
-    display_frame = cv2.resize(
-        frame,
-        (display_width, display_height),
-    )
-
-    # Calculate the empty space around the resized video.
-    offset_x = (DISPLAY_WIDTH - display_width) // 2
-    offset_y = (DISPLAY_HEIGHT - display_height) // 2
-
-    # Create the fixed-size display canvas.
-    display_canvas = cv2.copyMakeBorder(
-        display_frame,
-        offset_y,
-        DISPLAY_HEIGHT - display_height - offset_y,
-        offset_x,
-        DISPLAY_WIDTH - display_width - offset_x,
-        cv2.BORDER_CONSTANT,
-        value=(0, 0, 0),
+        f"{display_canvas.shape[1]}x{display_canvas.shape[0]}"
     )
 
     # Create the window and connect the mouse callback.

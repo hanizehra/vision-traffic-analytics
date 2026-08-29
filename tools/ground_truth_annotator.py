@@ -17,6 +17,9 @@ KEY_IN = ord("i")
 KEY_OUT = ord("o")
 KEY_SAVE = ord("s")
 KEY_ESC = 27
+KEY_CAR = ord("c")
+KEY_MOTORCYCLE = ord("m")
+KEY_PERSON = ord("p")
 
 WINDOW_NAME = "Ground Truth Annotator"
 
@@ -55,9 +58,7 @@ def save_ground_truth(
     )
 
 
-def get_next_event_id(
-    events: list[dict],
-) -> int:
+def get_next_event_id(events: list[dict],) -> int:
     """Return the next available event ID."""
 
     if not events:
@@ -92,17 +93,7 @@ def create_event(
             2,
         ),
     }
-
-
-def get_object_class(
-    video_name: str,
-) -> str:
-    """Return the object class for the selected video."""
-
-    if video_name.startswith("c"):
-        return "car"
-
-    return "person"
+    
 
 
 def move_to_frame(
@@ -121,24 +112,6 @@ def move_to_frame(
     return success, frame
 
 
-def draw_line(
-    image,
-    line_points: list[list[int]],
-) -> None:
-    """Draw the counting line on the displayed frame."""
-
-    point_1 = tuple(line_points[0])
-    point_2 = tuple(line_points[1])
-
-    cv2.line(
-        image,
-        point_1,
-        point_2,
-        LINE_COLOR,
-        2,
-    )
-
-
 def draw_status(
     image,
     frame_number: int,
@@ -146,6 +119,7 @@ def draw_status(
     events: list[dict],
     pending_events: list[dict],
     is_paused: bool,
+    current_class: str,
 ) -> None:
     """Draw annotation status information on the frame."""
 
@@ -162,11 +136,20 @@ def draw_status(
         TEXT_COLOR,
         2,
     )
+    cv2.putText(
+        image,
+        f"Class: {current_class}",
+        (20, 75),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        1,
+        (0, 255, 0),
+        2,
+    )
 
     cv2.putText(
         image,
         f"Time: {timestamp_sec:.2f}s",
-        (20, 65),
+        (20, 105),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.7,
         TEXT_COLOR,
@@ -176,7 +159,7 @@ def draw_status(
     cv2.putText(
         image,
         f"State: {state}",
-        (20, 95),
+        (20, 135),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.7,
         TEXT_COLOR,
@@ -186,7 +169,7 @@ def draw_status(
     cv2.putText(
         image,
         f"Events: {len(events)}",
-        (20, 125),
+        (20, 165),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.7,
         TEXT_COLOR,
@@ -203,7 +186,7 @@ def draw_status(
         cv2.putText(
             image,
             pending_text,
-            (20, 155),
+            (20, 195),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.7,
             TEXT_COLOR,
@@ -283,9 +266,7 @@ def main() -> None:
     fps = ground_truth["fps"]
     events = ground_truth["events"]
 
-    object_class = get_object_class(
-        args.video
-    )
+    current_class = "car"
 
     line_points = ground_truth["lines"][0]["points"]
     line_id = ground_truth["lines"][0]["id"]
@@ -303,7 +284,7 @@ def main() -> None:
     print(f"Resolution: {ground_truth['resolution']}")
     print(f"Line: {line_points}")
     print(f"Existing events: {len(events)}")
-    print(f"Object class: {object_class}")
+    print(f"Object class: {current_class}")
     print(f"Next Event ID: {next_event_id}")
 
     video_capture = cv2.VideoCapture(str(video_path))
@@ -351,10 +332,6 @@ def main() -> None:
             2,
         )
 
-        draw_line(
-            display_image,
-            line_points,
-        )
 
         draw_status(
             display_image,
@@ -363,6 +340,7 @@ def main() -> None:
             events,
             pending_events,
             is_paused,
+            current_class,
         )
 
         cv2.imshow(
@@ -386,6 +364,18 @@ def main() -> None:
             is_paused = not is_paused
 
             continue
+
+        if key == KEY_CAR:
+            current_class = "car"
+            print("Current class: car")
+
+        if key == KEY_MOTORCYCLE:
+            current_class = "motorcycle"
+            print("Current class: motorcycle")
+
+        if key == KEY_PERSON:
+            current_class = "person"
+            print("Current class: person")        
 
         if is_paused and key == KEY_PREVIOUS:
 
@@ -433,7 +423,7 @@ def main() -> None:
 
             event = create_event(
                 next_event_id,
-                object_class,
+                current_class,
                 line_id,
                 direction,
                 current_frame_number,
@@ -441,6 +431,7 @@ def main() -> None:
             )
 
             events.append(event)
+            pending_events.append(event)
 
             print(
                 f"[Frame {current_frame_number} | "
@@ -476,7 +467,11 @@ def main() -> None:
             removed_event_id = undo_last_event(events)
 
             if removed_event_id is not None:
-                next_event_id = removed_event_id        
+                next_event_id = removed_event_id 
+
+            pending_events.clear()
+
+            continue           
 
     video_capture.release()
     cv2.destroyAllWindows()
