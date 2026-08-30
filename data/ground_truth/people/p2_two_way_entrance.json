@@ -1,23 +1,54 @@
 {
+    "schema_version": "1.0",
     "video": "data/videos/people/p2_two_way_entrance.mp4",
+    "fps": 29.97002997002997,
     "resolution": [
         1920,
         1080
     ],
+    "duration_sec": 64.13,
     "lines": [
         {
             "id": "L1",
             "name": "count_line",
             "points": [
                 [
-                    929,
-                    24
+                    887,
+                    5
                 ],
                 [
-                    1021,
-                    595
+                    988,
+                    629
                 ]
             ]
+        }
+    ],
+    "annotator": "Hani",
+    "annotation_date": "2026-08-31",
+    "events": [
+        {
+            "track_id": 1,
+            "class": "person",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 339,
+            "timestamp_sec": 11.31
+        },
+        {
+            "track_id": 2,
+            "class": "person",
+            "line_id": "L1",
+            "direction": "out",
+            "frame": 1121,
+            "timestamp_sec": 37.4
+        },
+        {
+            "track_id": 3,
+            "class": "person",
+            "line_id": "L1",
+            "direction": "out",
+            "frame": 1161,
+            "timestamp_sec": 38.74
         }
     ]
 }

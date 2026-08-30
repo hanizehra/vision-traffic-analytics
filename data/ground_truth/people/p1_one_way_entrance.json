@@ -1,23 +1,78 @@
 {
+    "schema_version": "1.0",
     "video": "data/videos/people/p1_one_way_entrance.mp4",
+    "fps": 29.97002997002997,
     "resolution": [
         1920,
         1080
     ],
+    "duration_sec": 5.31,
     "lines": [
         {
             "id": "L1",
             "name": "count_line",
             "points": [
                 [
-                    902,
-                    528
+                    863,
+                    501
                 ],
                 [
-                    368,
-                    1036
+                    286,
+                    1042
                 ]
             ]
+        }
+    ],
+    "annotator": "Hani",
+    "annotation_date": "2026-08-31",
+    "events": [
+        {
+            "track_id": 1,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 13,
+            "timestamp_sec": 0.43
+        },
+        {
+            "track_id": 2,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 19,
+            "timestamp_sec": 0.63
+        },
+        {
+            "track_id": 3,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 67,
+            "timestamp_sec": 2.24
+        },
+        {
+            "track_id": 4,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 91,
+            "timestamp_sec": 3.04
+        },
+        {
+            "track_id": 5,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 151,
+            "timestamp_sec": 5.04
+        },
+        {
+            "track_id": 6,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 151,
+            "timestamp_sec": 5.04
         }
     ]
 }
