@@ -13,12 +13,12 @@
             "name": "count_line",
             "points": [
                 [
-                    493,
-                    840
+                    1916,
+                    685
                 ],
                 [
-                    1906,
-                    800
+                    497,
+                    856
                 ]
             ]
         }
@@ -31,168 +31,248 @@
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 42,
-            "timestamp_sec": 0.84
+            "frame": 33,
+            "timestamp_sec": 0.66
         },
         {
             "track_id": 2,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 76,
-            "timestamp_sec": 1.52
+            "frame": 55,
+            "timestamp_sec": 1.1
         },
         {
             "track_id": 3,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 105,
-            "timestamp_sec": 2.1
+            "frame": 96,
+            "timestamp_sec": 1.92
         },
         {
             "track_id": 4,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 141,
-            "timestamp_sec": 2.82
+            "frame": 135,
+            "timestamp_sec": 2.7
         },
         {
             "track_id": 5,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 185,
-            "timestamp_sec": 3.7
+            "frame": 166,
+            "timestamp_sec": 3.32
         },
         {
             "track_id": 6,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 202,
-            "timestamp_sec": 4.04
+            "frame": 196,
+            "timestamp_sec": 3.92
         },
         {
             "track_id": 7,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 378,
-            "timestamp_sec": 7.56
+            "frame": 370,
+            "timestamp_sec": 7.4
         },
         {
             "track_id": 8,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 507,
-            "timestamp_sec": 10.14
+            "frame": 489,
+            "timestamp_sec": 9.78
         },
         {
             "track_id": 9,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 702,
-            "timestamp_sec": 14.04
+            "frame": 694,
+            "timestamp_sec": 13.88
         },
         {
             "track_id": 10,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 800,
-            "timestamp_sec": 16.0
+            "frame": 778,
+            "timestamp_sec": 15.56
         },
         {
             "track_id": 11,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 844,
-            "timestamp_sec": 16.88
+            "frame": 836,
+            "timestamp_sec": 16.72
         },
         {
             "track_id": 12,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 1176,
-            "timestamp_sec": 23.52
+            "frame": 1167,
+            "timestamp_sec": 23.34
         },
         {
             "track_id": 13,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 1226,
-            "timestamp_sec": 24.52
+            "frame": 1206,
+            "timestamp_sec": 24.12
         },
         {
             "track_id": 14,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 1349,
-            "timestamp_sec": 26.98
+            "frame": 1331,
+            "timestamp_sec": 26.62
         },
         {
             "track_id": 15,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 1665,
-            "timestamp_sec": 33.3
+            "frame": 1658,
+            "timestamp_sec": 33.16
         },
         {
             "track_id": 16,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 1695,
-            "timestamp_sec": 33.9
+            "frame": 1671,
+            "timestamp_sec": 33.42
         },
         {
             "track_id": 17,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 1724,
-            "timestamp_sec": 34.48
+            "frame": 1717,
+            "timestamp_sec": 34.34
         },
         {
             "track_id": 18,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 1795,
-            "timestamp_sec": 35.9
+            "frame": 1770,
+            "timestamp_sec": 35.4
         },
         {
             "track_id": 19,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 1927,
-            "timestamp_sec": 38.54
+            "frame": 1905,
+            "timestamp_sec": 38.1
         },
         {
             "track_id": 20,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 1929,
-            "timestamp_sec": 38.58
+            "frame": 1922,
+            "timestamp_sec": 38.44
         },
         {
             "track_id": 21,
             "class": "car",
             "line_id": "L1",
             "direction": "in",
-            "frame": 1987,
-            "timestamp_sec": 39.74
+            "frame": 1978,
+            "timestamp_sec": 39.56
+        },
+        {
+            "track_id": 22,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 2113,
+            "timestamp_sec": 42.26
+        },
+        {
+            "track_id": 23,
+            "class": "motorcycle",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 2130,
+            "timestamp_sec": 42.6
+        },
+        {
+            "track_id": 24,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 2187,
+            "timestamp_sec": 43.74
+        },
+        {
+            "track_id": 25,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 2204,
+            "timestamp_sec": 44.08
+        },
+        {
+            "track_id": 26,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 2303,
+            "timestamp_sec": 46.06
+        },
+        {
+            "track_id": 27,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 2412,
+            "timestamp_sec": 48.24
+        },
+        {
+            "track_id": 28,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 2490,
+            "timestamp_sec": 49.8
+        },
+        {
+            "track_id": 29,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 2693,
+            "timestamp_sec": 53.86
+        },
+        {
+            "track_id": 30,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 2727,
+            "timestamp_sec": 54.54
+        },
+        {
+            "track_id": 31,
+            "class": "car",
+            "line_id": "L1",
+            "direction": "in",
+            "frame": 2925,
+            "timestamp_sec": 58.5
         }
     ]
 }
