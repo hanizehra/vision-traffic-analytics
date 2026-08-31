@@ -23,3 +23,6 @@ results/
 
 # Python packaging metadata
 *.egg-info/
+
+#yolo26.s 
+*.pt
