@@ -17,8 +17,7 @@ KEY_IN = ord("i")
 KEY_OUT = ord("o")
 KEY_SAVE = ord("s")
 KEY_ESC = 27
-KEY_CAR = ord("c")
-KEY_MOTORCYCLE = ord("m")
+KEY_VEHICLE = ord("v")
 KEY_PERSON = ord("p")
 
 WINDOW_NAME = "Ground Truth Annotator"
@@ -329,13 +328,9 @@ def main() -> None:
 
             continue
 
-        if key == KEY_CAR:
-            current_class = "car"
-            print("Current class: car")
-
-        if key == KEY_MOTORCYCLE:
-            current_class = "motorcycle"
-            print("Current class: motorcycle")
+        if key == KEY_VEHICLE:
+            current_class = "vehicle"
+            print("Current class: vehicle")
 
         if key == KEY_PERSON:
             current_class = "person"
