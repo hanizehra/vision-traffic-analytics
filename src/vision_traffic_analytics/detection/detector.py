@@ -16,6 +16,20 @@ PERSON_CLASS = "person"
 VEHICLE_CLASS = "vehicle"
 
 
+
+def get_application_class(class_id: int) -> str | None:
+    """Map YOLO class IDs to application classes."""
+
+    if class_id == YOLO_PERSON_CLASS_ID:
+        return PERSON_CLASS
+
+    if class_id in YOLO_VEHICLE_CLASS_IDS:
+        return VEHICLE_CLASS
+
+    return None
+
+
+
 @dataclass
 class Detection:
     """Represent a single detected object."""
@@ -56,17 +70,14 @@ class ObjectDetector:
         if result.boxes is None:
             return detections
 
+
         for box in result.boxes:
             class_id = int(box.cls[0])
 
-            if class_id == YOLO_PERSON_CLASS_ID:
-                application_class = PERSON_CLASS
+            application_class = get_application_class(class_id)
 
-            elif class_id in YOLO_VEHICLE_CLASS_IDS:
-                application_class = VEHICLE_CLASS
-
-            else:
-                continue            
+            if application_class is None:
+                continue        
 
             confidence = float(box.conf[0])
             
