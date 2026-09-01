@@ -1,14 +1,27 @@
 import argparse
+import json
 from pathlib import Path
 
 import cv2
 
-from vision_traffic_analytics.config import VIDEO_PATHS
+from vision_traffic_analytics.tracking.tracker import ObjectTracker
+from vision_traffic_analytics.counting.counter import (
+    Counter,
+    load_counting_line,
+)
+
+from vision_traffic_analytics.config import (
+    VIDEO_PATHS,
+    GROUND_TRUTH_PATHS,
+    PREDICTION_PATHS,
+    COUNTING_CLASSES,
+    IN_TRANSITIONS,
+)
+
 from vision_traffic_analytics.frame_utils import (
     prepare_display_frame,
     convert_to_display_coordinates,
 )
-from vision_traffic_analytics.tracking.tracker import ObjectTracker
 
 
 KEY_SPACE = ord(" ")
@@ -27,10 +40,42 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "video",
         choices=VIDEO_PATHS.keys(),
-        help="Video name: c1, c2, p1, or p2",
+        help="Video name: v1, v2, p1, or p2",
     )
 
     return parser.parse_args()
+
+
+def draw_counting_line(
+    frame,
+    counting_line,
+    scale_factor: float,
+    offset_x: int,
+    offset_y: int,
+) -> None:
+    """Draw the counting line on the display frame."""
+
+    start = convert_to_display_coordinates(
+        counting_line.start,
+        scale_factor,
+        offset_x,
+        offset_y,
+    )
+
+    end = convert_to_display_coordinates(
+        counting_line.end,
+        scale_factor,
+        offset_x,
+        offset_y,
+    )
+
+    cv2.line(
+        frame,
+        start,
+        end,
+        (255, 0, 0),
+        2,
+    )
 
 
 def draw_tracks(
@@ -40,29 +85,18 @@ def draw_tracks(
     offset_x: int,
     offset_y: int,
 ) -> None:
-    """Draw tracking bounding boxes, labels, and track IDs."""
+    """Draw tracking labels and center points."""
 
     for track in tracks:
 
-        x1, y1, x2, y2 = track.bounding_box
         center_x, center_y = track.center
 
-        display_top_left = convert_to_display_coordinates(
-            [x1, y1],
+        display_center = convert_to_display_coordinates(
+            [center_x, center_y],
             scale_factor,
             offset_x,
             offset_y,
         )
-
-        display_bottom_right = convert_to_display_coordinates(
-            [x2, y2],
-            scale_factor,
-            offset_x,
-            offset_y,
-        )
-
-        x1_display, y1_display = display_top_left
-        x2_display, y2_display = display_bottom_right
 
         label = (
             f"{track.class_name} "
@@ -70,24 +104,37 @@ def draw_tracks(
             f"{track.confidence:.2f}"
         )
 
+        (text_width, text_height), baseline = cv2.getTextSize(
+            label,
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            2,
+        )
+
+        label_x = display_center[0]
+        label_y = max(
+            display_center[1] - 10,
+            text_height + baseline + 5,
+        )
+
         cv2.rectangle(
             frame,
-            (x1_display, y1_display),
-            (x2_display, y2_display),
-            (0, 255, 0),
-            2,
+            (
+                label_x,
+                label_y - text_height - baseline,
+            ),
+            (
+                label_x + text_width,
+                label_y,
+            ),
+            (0, 0, 0),
+            -1,
         )
 
         cv2.putText(
             frame,
             label,
-            (
-                x1_display,
-                min(
-                    y2_display + 20,
-                    frame.shape[0] - 5,
-                ),
-            ),
+            (label_x, label_y - baseline),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
             (0, 0, 255),
@@ -96,10 +143,7 @@ def draw_tracks(
 
         cv2.circle(
             frame,
-            (
-                int(center_x * scale_factor + offset_x),
-                int(center_y * scale_factor + offset_y),
-            ),
+            display_center,
             4,
             (255, 0, 0),
             -1,
@@ -129,9 +173,44 @@ def main() -> None:
 
     tracker = ObjectTracker()
 
+    ground_truth_path = GROUND_TRUTH_PATHS[args.video]
+
+    counting_line = load_counting_line(
+        ground_truth_path
+    )
+
+    counter = Counter(
+        counting_line,
+        IN_TRANSITIONS[args.video],
+    )
+
+    counting_class = COUNTING_CLASSES[args.video]
+
+    fps = video_capture.get(
+        cv2.CAP_PROP_FPS
+    )
+
+    total_frames = int(
+        video_capture.get(
+            cv2.CAP_PROP_FRAME_COUNT
+        )
+    )
+
+    frame_width = int(
+        video_capture.get(
+            cv2.CAP_PROP_FRAME_WIDTH
+        )
+    )
+
+    frame_height = int(
+        video_capture.get(
+            cv2.CAP_PROP_FRAME_HEIGHT
+        )
+    )
+
     is_paused = False
     frame_number = 0
-    max_frames = 100
+    prediction_events = []
 
     while True:
 
@@ -144,13 +223,48 @@ def main() -> None:
 
             frame_number += 1
 
-            if frame_number > max_frames:
-                break
-
             tracks = tracker.track(frame)
+
+            for track in tracks:
+
+                if track.class_name != counting_class:
+                    continue
+
+                direction = counter.update(
+                    track.track_id,
+                    track.center,
+                )
+
+                if direction:
+
+                    print(
+                        f"Track ID {track.track_id}: {direction}"
+                    )
+
+                    prediction_events.append(
+                        {
+                            "track_id": track.track_id,
+                            "class": track.class_name,
+                            "line_id": "L1",
+                            "direction": direction,
+                            "frame": frame_number,
+                            "timestamp_sec": round(
+                                frame_number / fps,
+                                2,
+                            ),
+                        }
+                    )
 
             display_frame, scale_factor, offset_x, offset_y = (
                 prepare_display_frame(frame)
+            )
+
+            draw_counting_line(
+                display_frame,
+                counting_line,
+                scale_factor,
+                offset_x,
+                offset_y,
             )
 
             draw_tracks(
@@ -171,6 +285,26 @@ def main() -> None:
                 2,
             )
 
+            cv2.putText(
+                display_frame,
+                f"IN: {counter.in_count}",
+                (20, 65),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.8,
+                (0, 0, 255),
+                2,
+            )
+
+            cv2.putText(
+                display_frame,
+                f"OUT: {counter.out_count}",
+                (20, 100),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.8,
+                (0, 0, 255),
+                2,
+            )
+
         cv2.imshow(
             WINDOW_NAME,
             display_frame,
@@ -183,6 +317,55 @@ def main() -> None:
 
         if key == KEY_SPACE:
             is_paused = not is_paused
+
+    prediction_path = PREDICTION_PATHS[args.video]
+
+    prediction_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    prediction_data = {
+        "schema_version": "1.0",
+        "video": video_path.as_posix(),
+        "fps": fps,
+        "resolution": [
+            frame_width,
+            frame_height,
+        ],
+        "duration_sec": round(
+            total_frames / fps,
+            2,
+        ),
+        "lines": [
+            {
+                "id": "L1",
+                "name": "count_line",
+                "points": [
+                    list(counting_line.start),
+                    list(counting_line.end),
+                ],
+            }
+        ],
+        "annotator": "YOLO26s + ByteTrack",
+        "annotation_date": None,
+        "events": prediction_events,
+    }
+
+    with prediction_path.open(
+        "w",
+        encoding="utf-8",
+    ) as file:
+
+        json.dump(
+            prediction_data,
+            file,
+            indent=4,
+        )
+
+    print(
+        f"Prediction saved to: {prediction_path}"
+    )
 
     video_capture.release()
     cv2.destroyAllWindows()
