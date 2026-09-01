@@ -57,22 +57,6 @@
             "direction": "in",
             "frame": 91,
             "timestamp_sec": 3.04
-        },
-        {
-            "track_id": 5,
-            "class": "person",
-            "line_id": "L1",
-            "direction": "in",
-            "frame": 151,
-            "timestamp_sec": 5.04
-        },
-        {
-            "track_id": 6,
-            "class": "person",
-            "line_id": "L1",
-            "direction": "in",
-            "frame": 151,
-            "timestamp_sec": 5.04
         }
     ]
 }

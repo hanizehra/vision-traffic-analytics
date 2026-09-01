@@ -305,14 +305,6 @@
             "direction": "in",
             "frame": 401,
             "timestamp_sec": 16.04
-        },
-        {
-            "track_id": 36,
-            "class": "vehicle",
-            "line_id": "L1",
-            "direction": "out",
-            "frame": 405,
-            "timestamp_sec": 16.2
         }
     ]
 }
