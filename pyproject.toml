@@ -3,7 +3,9 @@ name = "vision-traffic-analytics"
 version = "0.1.0"
 requires-python = ">=3.13,<3.14"
 dependencies = [
+    "lap>=0.5.13",
     "opencv-python>=5.0.0.93",
+    "ultralytics>=8.4.135",
 ]
 
 [build-system]
