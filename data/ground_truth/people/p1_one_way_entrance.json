@@ -1,6 +1,6 @@
 {
     "schema_version": "1.0",
-    "video": "data/videos/people/p1_one_way_entrance.mp4",
+    "video": "data/ground_truth/people/p1_one_way_entrance.mp4",
     "fps": 29.97002997002997,
     "resolution": [
         1920,

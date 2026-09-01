@@ -1,6 +1,6 @@
 {
     "schema_version": "1.0",
-    "video": "data/videos/vehicle"vehicle"s/c1_one_way_road.mp4",
+    "video": "data/ground_truth/vehicle/v1_one_way_road.mp4",
     "fps": 50.0,
     "resolution": [
         1920,
